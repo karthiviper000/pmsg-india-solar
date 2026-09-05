@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PM Surya Ghar — India Rooftop Solar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0A0F1A; --panel:#111827; --panel2:#161E2E; --line:#1F2B3E;
+  --text:#E8EDF6; --dim:#7A8BA3; --solar:#F5B60D; --pv:#4C8FE8;
+  --pos:#3DC98A; --neg:#E8574F; --mono:'IBM Plex Mono',monospace;
+  --body:'IBM Plex Sans',system-ui,sans-serif; --disp:'Barlow Condensed',var(--body);
+  /* state accent colours — index matches state order */
+  --c0:#4C8FE8; --c1:#3DC98A; --c2:#E8A84C; --c3:#A87FE8; --c4:#E8574F;
+  --c5:#4CE8D4; --c6:#E87F4C; --c7:#7FE84C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--pv);text-decoration:none}
+
+/* ── header ── */
+header{background:linear-gradient(180deg,#0D1525,var(--ink));border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.hinner{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{display:flex;flex-direction:column;gap:2px}
+.logo-title{font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+.logo-title span{color:var(--solar)}
+.logo-sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.spacer{flex:1;min-width:10px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);flex:none}
+.live-dot.on{background:var(--pos);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,201,138,.5)}70%{box-shadow:0 0 0 8px rgba(61,201,138,0)}100%{box-shadow:0 0 0 0 rgba(61,201,138,0)}}
+.hbtn{background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:6px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-family:inherit;white-space:nowrap}
+.hbtn:hover{border-color:var(--pv)}.hbtn.on{background:var(--pv);border-color:var(--pv);color:#05101F;font-weight:600}
+.live-txt{font-family:var(--mono);font-size:11px;color:var(--dim)}
+
+/* ── state tabs ── */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);background:var(--panel);padding:0 20px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 18px;font-size:13px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;color:var(--dim);transition:color .15s,border-color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--solar)}
+.tab.all{font-weight:600}
+
+/* ── wrap ── */
+.wrap{max-width:1400px;margin:0 auto;padding:20px 20px 80px}
+.banner{padding:9px 14px;border-radius:6px;font-size:12px;border:1px solid;margin-bottom:14px;display:none}
+.banner.demo{display:block;background:rgba(245,182,13,.07);border-color:rgba(245,182,13,.4);color:#F7CE5B}
+
+/* ── india summary strip ── */
+.india-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:22px}
+.icard{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;position:relative;overflow:hidden}
+.icard::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--solar)}
+.icard .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.icard .val{font-family:var(--mono);font-size:24px;font-weight:600;margin-top:6px;letter-spacing:-.02em}
+.icard .unit{font-size:12px;color:var(--dim);font-weight:400}
+.delta{font-family:var(--mono);font-size:11px;margin-top:4px;color:var(--dim)}
+.delta.up{color:var(--pos)}.delta.down{color:var(--neg)}
+
+/* ── state cards ── */
+.state-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color .15s}
+.scard:hover,.scard.active{border-color:var(--solar)}
+.scard-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.scard-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.scard-name{font-family:var(--disp);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.04em}
+.scard-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.ss{font-size:11px;color:var(--dim)}.ss b{display:block;font-family:var(--mono);font-size:14px;color:var(--text);font-weight:500}
+
+/* ── section head ── */
+.sechead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+h2{font-family:var(--disp);font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.05em}
+.hint{font-size:11px;color:var(--dim)}
+
+/* ── ladder ── */
+.ladder-wrap{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:24px}
+.lhead,.lrow{display:grid;gap:10px;padding:8px 14px;align-items:center}
+.lhead{grid-template-columns:24px 14px 1fr 170px 80px 72px 32px;background:var(--panel2);
+       font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line)}
+.lrow{grid-template-columns:24px 14px 1fr 170px 80px 72px 32px;border-bottom:1px solid rgba(31,43,62,.6);cursor:pointer}
+.lrow:last-child{border-bottom:0}
+.lrow:hover{background:var(--panel2)}
+.lrow.pinned{background:rgba(76,143,232,.07)}
+.rank{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:right}
+.sdot{width:8px;height:8px;border-radius:50%;flex:none}
+.dname{font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dname .stag{font-size:10px;color:var(--dim);font-weight:400;margin-left:6px;font-family:var(--mono)}
+.meter{height:14px;background:#080F1C;border:1px solid var(--line);border-radius:2px;position:relative;overflow:hidden}
+.meter .fill{position:absolute;inset:0 auto 0 0;border-radius:2px 0 0 2px}
+.meter .tick{position:absolute;top:-1px;bottom:-1px;width:2px;background:var(--solar);opacity:.8}
+.num{font-family:var(--mono);font-size:12px;text-align:right;font-weight:500}
+.num.dim{color:var(--dim)}
+.pin{background:none;border:1px solid var(--line);color:var(--dim);border-radius:3px;width:24px;height:22px;cursor:pointer;font-size:12px;line-height:1;padding:0}
+.pin:hover,.pin.on{border-color:var(--solar);color:var(--solar)}
+
+/* ── comparison tray ── */
+.tray{position:fixed;left:0;right:0;bottom:0;background:rgba(10,15,26,.97);border-top:1px solid var(--pv);
+      backdrop-filter:blur(12px);z-index:40;transform:translateY(105%);transition:transform .25s}
+.tray.open{transform:none}
+.tinner{max-width:1400px;margin:0 auto;padding:10px 20px}
+.trow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.trow h4{font-family:var(--disp);font-size:14px;text-transform:uppercase;letter-spacing:.05em}
+.tcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px}
+.tcard{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:9px 12px}
+.tcard-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.tcard-name{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+.tcard .x{background:none;border:0;color:var(--dim);cursor:pointer;font-size:13px;line-height:1;padding:0}
+.tstat{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:2px}
+.tstat b{font-family:var(--mono);color:var(--text);font-weight:500}
+.tcard.best{border-color:var(--solar)}
+
+/* ── tables ── */
+.tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:24px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);padding:9px 10px;
+   text-align:left;border-bottom:1px solid var(--line);background:var(--panel2);position:sticky;top:0}
+td{padding:7px 10px;border-bottom:1px solid rgba(31,43,62,.5)}
+tbody tr:hover{background:var(--panel2)}
+.tnum{font-family:var(--mono);text-align:right;white-space:nowrap}
+.vlink{cursor:pointer;color:var(--pv);border-bottom:1px dotted rgba(76,143,232,.4)}
+.mine{color:var(--solar);font-weight:600}
+.stars{color:var(--solar);font-family:var(--mono);font-size:11px}
+
+/* ── search ── */
+input.search{background:var(--panel2);color:var(--text);border:1px solid var(--line);
+             padding:7px 12px;border-radius:5px;font-size:13px;font-family:inherit;min-width:220px}
+input.search:focus{outline:none;border-color:var(--pv)}
+
+/* ── modal ── */
+.scrim{position:fixed;inset:0;background:rgba(5,9,18,.78);z-index:70;display:none;
+       align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.scrim.open{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+       width:min(980px,100%);box-shadow:0 28px 80px rgba(0,0,0,.7)}
+.mhead{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.mhead-txt{flex:1}.mhead-txt h3{font-family:var(--disp);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.mhead-txt p{font-size:12px;color:var(--dim);margin-top:3px}
+.mclose{background:none;border:1px solid var(--line);color:var(--dim);border-radius:5px;width:28px;height:28px;cursor:pointer;flex:none}
+.mclose:hover{border-color:var(--neg);color:var(--neg)}
+.mbody{max-height:68vh;overflow:auto}
+.mstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:var(--line)}
+.mstat{background:var(--panel2);padding:10px 14px}
+.mstat .lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.mstat .v{font-family:var(--mono);font-size:17px;margin-top:4px;font-weight:500}
+.cov{padding:14px 18px}
+.covrow{display:grid;grid-template-columns:1fr 140px 60px;gap:10px;align-items:center;margin-bottom:5px;font-size:12px}
+.covbar{height:10px;background:#080F1C;border-radius:2px;overflow:hidden}
+.covbar i{display:block;height:100%;background:var(--pv)}
+.loading{padding:28px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:12px}
+.empty{padding:24px;text-align:center;color:var(--dim);font-size:13px}
+
+footer{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--dim);line-height:1.8}
+
+/* ── top-3 comparison section ── */
+.cmp-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.cmp-tog{background:var(--panel2);color:var(--dim);border:1px solid var(--line);padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-family:inherit}
+.cmp-tog.on{border-color:var(--solar);color:var(--solar);background:rgba(245,182,13,.08)}
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.cmp-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.cmp-card-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.cmp-card-head .cdot{width:8px;height:8px;border-radius:50%;flex:none}
+.cmp-card-head h4{font-family:var(--disp);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;flex:1}
+.cmp-card-head .ctot{font-family:var(--mono);font-size:11px;color:var(--dim);white-space:nowrap}
+.cmp-card-head .kbadge{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:3px;white-space:nowrap;background:rgba(245,182,13,.12);color:var(--solar)}
+.vr{display:grid;grid-template-columns:20px 1fr 70px;gap:8px;align-items:center;padding:7px 14px;border-bottom:1px solid rgba(31,43,62,.6)}
+.vr:last-child{border-bottom:0}
+.vr.krow{background:rgba(245,182,13,.06);border-left:3px solid var(--solar)}
+.vr .vr-rank{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:right}
+.vr .vr-name{font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vr .vr-name.kname{color:var(--solar);font-weight:600}
+.vr .vr-rate{font-size:10px;color:var(--solar)}
+.vr .vr-bar{height:5px;background:#080F1C;border-radius:2px;margin-top:3px;overflow:hidden}
+.vr .vr-fill{height:100%;border-radius:2px}
+.vr .vr-inst{font-family:var(--mono);font-size:12px;font-weight:600;text-align:right}
+.ksep-row{display:flex;align-items:center;gap:8px;padding:5px 14px;background:rgba(245,182,13,.04);border-top:1px dashed rgba(245,182,13,.2)}
+.ksep-row .ksl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--solar);font-family:var(--mono)}
+.ksep-row .ksr{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:auto;margin-right:8px}
+.ksep-row .ksi{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--solar)}
+
+/* ── solar potential panel ── */
+.solar-panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.solar-hdr{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.solar-hdr h3{font-family:var(--disp);font-weight:700;font-size:17px;text-transform:uppercase;letter-spacing:.04em;flex:1}
+.solar-hdr .solar-live{font-family:var(--mono);font-size:11px;color:var(--pos)}
+.solar-hdr .solar-src{font-size:11px;color:var(--dim)}
+.solar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--line)}
+.solar-cell{background:var(--panel);padding:10px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:background .12s}
+.solar-cell:hover{background:var(--panel2)}
+.solar-cell .sc-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.solar-cell .sc-state{font-size:10px;color:var(--dim);font-family:var(--mono)}
+.solar-cell .sc-bars{display:flex;gap:3px;align-items:flex-end;height:28px;margin-top:2px}
+.solar-cell .sc-bar{flex:1;border-radius:2px 2px 0 0;min-height:3px}
+.solar-cell .sc-vals{display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono)}
+.solar-cell .sc-irr{color:var(--solar);font-weight:600}
+.solar-cell .sc-inst{color:var(--pv)}
+.solar-cell .sc-opp{font-size:10px;padding:2px 6px;border-radius:3px;font-family:var(--mono);font-weight:600;align-self:flex-start;margin-top:2px}
+.solar-cell .sc-opp.high{background:rgba(61,201,138,.15);color:var(--pos)}
+.solar-cell .sc-opp.med{background:rgba(76,143,232,.12);color:var(--pv)}
+.solar-cell .sc-opp.low{background:rgba(122,139,163,.1);color:var(--dim)}
+.solar-loading{padding:20px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:12px}
+.solar-legend{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--dim);flex-wrap:wrap}
+.solar-legend span{display:flex;align-items:center;gap:5px}
+.solar-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+@media(max-width:720px){
+  .lhead,.lrow{grid-template-columns:20px 10px 1fr 60px 28px}
+  .lhead .meter,.lrow .meter,.lhead .num.dim,.lrow .num.dim{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hinner">
+    <div class="logo">
+      <div class="logo-title">PM Surya Ghar <span>India</span></div>
+      <div class="logo-sub">Rooftop Solar · Registered Vendors</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="live-txt" id="livetxt">idle</span>
+    <span class="live-dot" id="dot"></span>
+    <button class="hbtn" id="liveBtn">Auto-refresh</button>
+    <select class="hbtn" id="snapSel" title="Snapshot"></select>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</header>
+
+<div class="wrap">
+  <div class="banner demo" id="demoBanner"></div>
+
+  <!-- India-wide summary -->
+  <div class="india-strip" id="strip"></div>
+
+  <!-- Solar potential panel -->
+  <section id="solarSection" style="margin-bottom:24px">
+    <div class="sechead">
+      <h2>☀ Solar Potential vs Installations</h2>
+      <span class="hint">Live irradiance from Open Meteo (7-day avg kWh/m²/day) · high irradiance + low installs = opportunity · click any district</span>
+      <div class="spacer"></div>
+      <button class="hbtn" id="solarRefreshBtn">↻ Refresh solar data</button>
+    </div>
+    <div class="solar-panel">
+      <div class="solar-hdr">
+        <h3>Solar irradiance &amp; adoption</h3>
+        <span class="solar-live" id="solarStatus">loading…</span>
+        <span class="solar-src">Source: Open Meteo API · updates on every page refresh</span>
+      </div>
+      <div id="solarGrid"><div class="solar-loading">Fetching live solar data…</div></div>
+      <div class="solar-legend">
+        <span><i style="background:var(--solar)"></i> Solar irradiance (kWh/m²/day)</span>
+        <span><i style="background:var(--pv)"></i> Installations (normalised)</span>
+        <span><i style="background:var(--pos)"></i> High opportunity</span>
+        <span><i style="background:var(--dim)"></i> Saturated / low irradiance</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- State cards (visible in All view) -->
+  <div id="stateCardsWrap">
+    <div class="sechead"><h2 id="stateCardsTitle">States</h2></div>
+    <div class="state-cards" id="stateCards"></div>
+  </div>
+
+  <!-- District ladder -->
+  <section>
+    <div class="sechead">
+      <h2 id="ladderTitle">Districts</h2>
+      <span class="hint">Bar = installations · gold tick = share of vendors with ≥1 install · click for vendor list · ★ to compare</span>
+    </div>
+    <div class="ladder-wrap">
+      <div class="lhead">
+        <div class="rank">#</div><div></div><div>District</div>
+        <div style="background:none;border:0"></div>
+        <div class="num">Installs</div><div class="num dim">Active</div><div></div>
+      </div>
+      <div id="ladder"><div class="loading">Loading…</div></div>
+    </div>
+  </section>
+
+  <!-- Leaderboard -->
+  <section>
+    <div class="sechead">
+      <h2 id="topTitle">Vendor leaderboard</h2>
+      <span class="hint" id="topHint"></span>
+      <div class="spacer"></div>
+      <input class="search" id="q" placeholder="Search vendor or brand…">
+    </div>
+    <div class="tbl-wrap"><div id="topTbl"><div class="loading">Loading…</div></div></div>
+  </section>
+
+  <!-- Top-3 per district + Kondaas comparison -->
+  <section id="cmpSection" style="margin-top:34px">
+    <div class="sechead">
+      <h2 id="cmpTitle">Top 3 Installers per District</h2>
+      <span class="hint">Live from portal · KONDAAS highlighted in gold · click any vendor name to see full profile</span>
+    </div>
+    <div class="cmp-controls">
+      <button class="cmp-tog on" data-cstate="all">All States</button>
+      <div id="cmpStateBtns"></div>
+      <div class="spacer"></div>
+      <select id="cmpSort" class="hbtn">
+        <option value="installs">Sort by installs ↓</option>
+        <option value="kondaas">Sort by Kondaas rank</option>
+        <option value="name">Sort by name</option>
+      </select>
+    </div>
+    <div class="cmp-grid" id="cmpGrid"><div class="loading">Loading…</div></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<!-- comparison tray -->
+<div class="tray" id="tray">
+  <div class="tinner">
+    <div class="trow">
+      <h4>Comparing</h4>
+      <span class="hint" id="trayHint"></span>
+      <div class="spacer"></div>
+      <button class="hbtn" id="clearPins">Clear</button>
+    </div>
+    <div class="tcards" id="trayCards"></div>
+  </div>
+</div>
+
+<!-- modal -->
+<div class="scrim" id="scrim" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="mhead">
+      <div class="mhead-txt"><h3 id="mTitle">—</h3><p id="mSub"></p></div>
+      <button class="mclose" id="mClose">✕</button>
+    </div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA ACCESS  — works both with the Node server (REST)
+   and as a static Pages build (data.json bundle).
+═══════════════════════════════════════════════════════ */
+let STATIC = null;
+async function api(p) {
+  if (STATIC === null) {
+    try { const r = await fetch('/api/meta',{cache:'no-store'}); if(!r.ok) throw 0; await r.json(); STATIC = false; }
+    catch { const r = await fetch('data.json',{cache:'no-store'}); if(!r.ok) throw new Error('no API or data.json'); STATIC = await r.json(); document.documentElement.classList.add('static-mode'); }
+  }
+  if (STATIC === false) { const r=await fetch(p,{cache:'no-store'}); if(!r.ok) throw new Error((await r.json().catch(()=>({}))).error||r.status); return r.json(); }
+  return staticRoute(p);
+}
+
+function unpackV(v){return v&&{vendor_id:v.id,name:v.name,rating:v.rating,rating_count:v.rc,brands:v.brands,state_installs:v.si,state_capacity:v.sc,nat_installs:v.ni,nat_capacity:v.nc,contact_name:v.cn,contact_phone:v.cp,contact_email:v.ce,address:v.addr,website_url:v.web,redacted:!!v.redacted};}
+
+function staticRoute(p) {
+  const B=STATIC, u=new URL(p,location.origin), path_=u.pathname, sp=u.searchParams;
+  const state=sp.get('state');
+  if(path_==='/api/meta') return {snapshots:B.snapshots,latest:B.latest,previous:B.previous,allDemo:B.snapshots.every(s=>s.source==='demo')};
+  if(path_==='/api/india') return B.india||{};
+  if(path_==='/api/states') return state?B.states.filter(s=>s.name===state):B.states;
+  if(path_==='/api/districts') return state?B.districts.filter(d=>d.state===state):B.districts;
+  if(path_==='/api/compare') return {cur:B.latest,prev:B.previous,rows:state?B.compare.filter(r=>r.state===state):B.compare};
+  if(path_==='/api/top'){
+    const rows=state?B.top.filter(r=>r._states&&r._states.includes(state)):B.top;
+    return rows.slice(0,Number(sp.get('limit'))||25);
+  }
+  if(path_==='/api/search'){
+    const t=(sp.get('q')||'').toLowerCase();if(t.length<2)return[];
+    const per={};for(const [di,vid,inst] of B.coverage){const a=per[vid]||={i:0,d:0,sts:new Set()};a.i+=inst;a.d++;a.sts.add(B.dIndex[di]?.split('|')[0]);}
+    return Object.values(B.vendors).filter(v=>(v.name||'').toLowerCase().includes(t)||(v.cn||'').toLowerCase().includes(t)||(v.brands||'').toLowerCase().includes(t))
+      .map(v=>({...unpackV(v),installs:(per[v.id]||{}).i||0,districts:(per[v.id]||{}).d||0,states:(per[v.id]?.sts?.size)||0}))
+      .filter(v=>!state||true).sort((a,b)=>b.installs-a.installs).slice(0,50);
+  }
+  let m=path_.match(/^\/api\/district\/(.+)\/(.+)$/);
+  if(m){
+    const [,st,dn]=m.map(decodeURIComponent),idx=B.dIndex.indexOf(st+'|'+dn);
+    const vendors=B.coverage.filter(r=>r[0]===idx).sort((a,b)=>b[2]-a[2])
+      .map(([,vid,inst,cap])=>({...unpackV(B.vendors[vid])||{vendor_id:vid,name:'?'},vendor_id:vid,installs:inst,capacity:cap}));
+    return {district:dn,state:st,snapshot_id:B.latest,vendors};
+  }
+  m=path_.match(/^\/api\/vendor\/(\d+)$/);
+  if(m){
+    const id=+m[1],v=unpackV(B.vendors[id]);if(!v)throw new Error('not found');
+    v.coverage=B.coverage.filter(r=>r[1]===id).map(([di,,inst,cap])=>{const[st,dn]=(B.dIndex[di]||'|').split('|');return{state:st,state_label:st,district:dn,label:dn,installs:inst,capacity:cap};}).sort((a,b)=>b.installs-a.installs);
+    return v;
+  }
+  throw new Error('unknown route '+path_);
+}
+
+/* ═══════════════════ STATE ═══════════════════ */
+const $ = s => document.querySelector(s);
+const fmt  = n => n==null?'—':Number(n).toLocaleString('en-IN');
+const fmt1 = n => n==null?'—':Number(n).toLocaleString('en-IN',{maximumFractionDigits:1});
+const MINE = /kondaas/i;
+const STATE_COLORS = ['var(--c0)','var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)','var(--c7)'];
+
+let META={}, SNAP=null, ACTIVE_STATE=null, STATES=[], DISTRICTS=[], CMP={}, PINS=new Set(), timer=null, STATE_IDX={};
+
+function stateColor(name){ const i=Object.keys(STATE_IDX).indexOf(name); return STATE_COLORS[i%STATE_COLORS.length]; }
+
+/* ═══════════════════ BOOT ═══════════════════ */
+async function boot(){
+  META = await api('/api/meta');
+  if(!META.latest){ $('#ladder').innerHTML='<div class="empty">No data yet. Run <code>node src/ingest.js &lt;harvest.json&gt;</code> then reload.</div>'; return; }
+  SNAP = META.latest;
+  $('#snapSel').innerHTML = META.snapshots.map(s=>`<option value="${s.snapshot_id}">#${s.snapshot_id} · ${new Date(s.captured_at).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})} · ${s.states||s.source}</option>`).join('');
+  $('#snapSel').value = SNAP;
+  if(META.allDemo){ const b=$('#demoBanner'); b.style.display='block'; b.textContent='Demo data — synthetic, not from the portal.'; }
+  if(STATIC) $('#snapSel').style.display='none';
+  await refresh();
+}
+
+async function refresh(){
+  const [statesData, allDistricts, cmp] = await Promise.all([
+    api('/api/states?snap='+SNAP),
+    api('/api/districts?snap='+SNAP),
+    api('/api/compare?cur='+SNAP)
+  ]);
+  STATES = statesData;
+  STATES.forEach((s,i)=>{ STATE_IDX[s.name]=i; });
+  DISTRICTS = ACTIVE_STATE ? allDistricts.filter(d=>d.state===ACTIVE_STATE) : allDistricts;
+  CMP = Object.fromEntries((cmp.rows||[]).map(r=>[r.state+'|'+r.district,r]));
+  HAS_PREV = !!cmp.prev;
+
+  drawTabs();
+  drawStrip(allDistricts);
+  drawStateCards(statesData);
+  drawLadder();
+  drawTray();
+  loadTop();
+  drawSolarPanel();
+
+  const snap = META.snapshots.find(s=>s.snapshot_id===Number(SNAP))||{};
+  $('#foot').innerHTML = `Source: <a href="https://pmsuryaghar.gov.in/#/registered-vendors" target="_blank">pmsuryaghar.gov.in</a> — Snapshot #${snap.snapshot_id||'?'} · ${new Date(snap.captured_at||Date.now()).toLocaleString('en-IN')} · ${snap.source||''}`
+    +(HAS_PREV?` · deltas vs snapshot #${cmp.prev}`:'');
+}
+
+let HAS_PREV = false;
+
+/* ═══════════════════ TABS ═══════════════════ */
+function drawTabs(){
+  $('#tabs').innerHTML = [
+    `<div class="tab all ${!ACTIVE_STATE?'active':''}" data-state="">All India</div>`,
+    ...STATES.map(s=>`<div class="tab ${ACTIVE_STATE===s.name?'active':''}" data-state="${s.name}" style="border-bottom-color:${ACTIVE_STATE===s.name?stateColor(s.name):'transparent'}">${s.display}</div>`)
+  ].join('');
+}
+
+/* ═══════════════════ INDIA STRIP ═══════════════════ */
+function drawStrip(allDistricts){
+  const india = { installs:allDistricts.reduce((a,d)=>a+(d.installs||0),0),
+                  capacity:allDistricts.reduce((a,d)=>a+(d.capacity_kw||0),0),
+                  active:allDistricts.reduce((a,d)=>a+(d.active_vendors||0),0) };
+  const dCmp  = Object.values(CMP);
+  const di    = dCmp.reduce((a,r)=>a+(r.d_installs||0),0);
+  const scope = ACTIVE_STATE ? STATES.find(s=>s.name===ACTIVE_STATE) : null;
+  const shown = scope ? [
+    {l:'Installations',      v:fmt(scope.installs),  d:dchip(dCmp.filter(r=>r.state===ACTIVE_STATE).reduce((a,r)=>a+(r.d_installs||0),0))},
+    {l:'Capacity',           v:fmt1(scope.capacity_kw), u:'kW', d:''},
+    {l:'Unique vendors',     v:fmt(scope.unique_vendors), d:''},
+    {l:'Districts',          v:fmt(scope.districts), d:''},
+    {l:'Active vendor slots',v:fmt(DISTRICTS.reduce((a,d)=>a+(d.active_vendors||0),0)), d:''},
+  ] : [
+    {l:'Total installs',     v:fmt(india.installs),  d:dchip(di), hero:true},
+    {l:'Capacity',           v:fmt1(india.capacity), u:'kW', d:''},
+    {l:'States',             v:fmt(STATES.length), d:''},
+    {l:'Districts',          v:fmt(allDistricts.length), d:''},
+    {l:'Active vendor slots',v:fmt(india.active), d:''},
+  ];
+  $('#strip').innerHTML = shown.map(c=>`<div class="icard"><div class="lbl">${c.l}</div><div class="val">${c.v}${c.u?` <span class="unit">${c.u}</span>`:''}</div>${c.d}</div>`).join('');
+}
+
+function dchip(d){ if(d==null||!HAS_PREV)return`<div class="delta">no baseline</div>`;const cls=d>0?'up':d<0?'down':'';const sign=d>0?'▲ +':d<0?'▼ ':'';return`<div class="delta ${cls}">${sign}${fmt(Math.abs(d))}</div>`; }
+
+/* ═══════════════════ STATE CARDS ═══════════════════ */
+function drawStateCards(states){
+  const show = !ACTIVE_STATE;
+  $('#stateCardsWrap').style.display = show ? '' : 'none';
+  if(!show) return;
+  $('#stateCards').innerHTML = states.map(s=>`
+    <div class="scard ${ACTIVE_STATE===s.name?'active':''}" data-state="${s.name}">
+      <div class="scard-head"><span class="scard-dot" style="background:${stateColor(s.name)}"></span><span class="scard-name">${s.display}</span></div>
+      <div class="scard-stats">
+        <div class="ss"><b>${fmt(s.installs)}</b>Installs</div>
+        <div class="ss"><b>${fmt1(s.capacity_kw)} kW</b>Capacity</div>
+        <div class="ss"><b>${fmt(s.unique_vendors)}</b>Vendors</div>
+      </div>
+    </div>`).join('');
+  $('#stateCardsTitle').textContent = 'States';
+}
+
+/* ═══════════════════ LADDER ═══════════════════ */
+function drawLadder(){
+  const title = ACTIVE_STATE ? (STATES.find(s=>s.name===ACTIVE_STATE)||{}).display+' — Districts' : 'All Districts';
+  $('#ladderTitle').textContent = title;
+  if(!DISTRICTS.length){ $('#ladder').innerHTML='<div class="empty">No districts in this snapshot.</div>'; return; }
+  const max = Math.max(...DISTRICTS.map(d=>d.installs||0),1);
+  const showState = !ACTIVE_STATE;
+  $('#ladder').innerHTML = DISTRICTS.map((d,i)=>{
+    const pct = (d.installs||0)/max*100;
+    const tickPct = d.vendor_count?((d.active_vendors||0)/d.vendor_count*100):0;
+    const col = stateColor(d.state);
+    const key = d.state+'|'+d.district;
+    const c   = CMP[key]||{};
+    const dl  = HAS_PREV&&c.d_installs?`<small style="color:${c.d_installs>0?'var(--pos)':'var(--neg)'}">${c.d_installs>0?'+':''}${fmt(c.d_installs)}</small>`:'';
+    return `<div class="lrow ${PINS.has(key)?'pinned':''}" data-key="${encodeURIComponent(key)}" tabindex="0" role="button">
+      <div class="rank">${i+1}</div>
+      <span class="sdot" style="background:${col}"></span>
+      <div class="dname">${d.district_label}${showState?`<span class="stag">${d.state_label}</span>`:''} ${dl}</div>
+      <div class="meter"><i class="fill" style="width:${pct}%;background:${col}"></i><span class="tick" style="left:${tickPct}%"></span></div>
+      <div class="num">${fmt(d.installs)}</div>
+      <div class="num dim">${fmt(d.active_vendors)}</div>
+      <button class="pin ${PINS.has(key)?'on':''}" data-pin="${encodeURIComponent(key)}" aria-label="Pin">☆</button>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════ COMPARISON TRAY ═══════════════════ */
+function drawTray(){
+  const pinned = DISTRICTS.filter(d=>PINS.has(d.state+'|'+d.district));
+  const all_pinned = [...PINS].map(k=>{ const[st,...rest]=decodeURIComponent(k).split('|'); const dn=rest.join('|'); return DISTRICTS.find(d=>d.state===st&&d.district===dn)||STATES.flatMap(()=>[]).find(()=>false); }).filter(Boolean);
+  const rows = [...PINS].map(k=>{ const[st,...rest]=k.split('|'); const dn=decodeURIComponent(rest.join('|').replace(/%7C/g,'|')); return DISTRICTS.find(d=>d.state===decodeURIComponent(st)&&d.district===dn); }).filter(Boolean);
+  $('#tray').classList.toggle('open', rows.length>0);
+  if(!rows.length) return;
+  const best = Math.max(...rows.map(r=>r.installs||0));
+  $('#trayHint').textContent = `${rows.length} district${rows.length>1?'s':''}`;
+  $('#trayCards').innerHTML = rows.map(r=>{
+    const key=r.state+'|'+r.district, c=CMP[key]||{};
+    const per=r.active_vendors?(r.installs/r.active_vendors):0;
+    return `<div class="tcard ${r.installs===best?'best':''}">
+      <div class="tcard-head"><span class="tcard-name"><span class="sdot" style="background:${stateColor(r.state)}"></span>${r.district_label}</span><button class="x" data-pin="${encodeURIComponent(key)}">✕</button></div>
+      <div class="tstat"><span>Installs</span><b>${fmt(r.installs)}</b></div>
+      <div class="tstat"><span>Capacity</span><b>${fmt1(r.capacity_kw)} kW</b></div>
+      <div class="tstat"><span>Active vendors</span><b>${fmt(r.active_vendors)}</b></div>
+      <div class="tstat"><span>Inst/vendor</span><b>${fmt1(per)}</b></div>
+      <div class="tstat"><span>Change</span><b style="color:${(c.d_installs||0)>0?'var(--pos)':(c.d_installs||0)<0?'var(--neg)':'var(--dim)'}">${HAS_PREV?((c.d_installs>0?'+':'')+fmt(c.d_installs||0)):'—'}</b></div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════ LEADERBOARD ═══════════════════ */
+async function loadTop(term){
+  const stateParam = ACTIVE_STATE?'&state='+encodeURIComponent(ACTIVE_STATE):'';
+  const rows = term&&term.length>1
+    ? await api(`/api/search?snap=${SNAP}&q=${encodeURIComponent(term)}${stateParam}`)
+    : await api(`/api/top?snap=${SNAP}&limit=25${stateParam}`);
+  $('#topTitle').textContent = ACTIVE_STATE ? (STATES.find(s=>s.name===ACTIVE_STATE)||{}).display+' — Top Vendors' : 'India — Top Vendors';
+  $('#topHint').textContent = ACTIVE_STATE ? 'installations within this state' : 'across all states';
+  if(!rows.length){ $('#topTbl').innerHTML='<div class="empty">No results.</div>'; return; }
+  const showStates = !ACTIVE_STATE;
+  $('#topTbl').innerHTML = `<table><thead><tr>
+    <th style="width:30px">#</th><th>Vendor</th><th>Rating</th>
+    ${showStates?'<th>States</th>':''}
+    <th class="tnum">Districts</th><th class="tnum">Installs</th><th class="tnum">kW</th>
+  </tr></thead><tbody>${rows.map((v,i)=>`<tr>
+    <td class="tnum" style="color:var(--dim)">${i+1}</td>
+    <td><span class="vlink ${MINE.test(v.name)?'mine':''}" data-v="${v.vendor_id}">${v.name||'(unnamed)'}</span></td>
+    <td class="stars">${v.rating?'★'+v.rating+' <span style="color:var(--dim)">('+fmt(v.rating_count||0)+')</span>':'<span style="color:var(--dim)">—</span>'}</td>
+    ${showStates?`<td class="tnum">${fmt(v.states||'—')}</td>`:''}
+    <td class="tnum">${fmt(v.districts)}</td>
+    <td class="tnum">${fmt(v.installs)}</td>
+    <td class="tnum">${fmt1(v.capacity)}</td>
+  </tr>`).join('')}</tbody></table>`;
+}
+
+/* ═══════════════════ MODALS ═══════════════════ */
+let lastFocus;
+function openModal(title, sub){ lastFocus=document.activeElement; $('#mTitle').textContent=title; $('#mSub').textContent=sub||''; $('#mBody').innerHTML='<div class="loading">Loading…</div>'; $('#scrim').classList.add('open'); $('#mClose').focus(); }
+function closeModal(){ $('#scrim').classList.remove('open'); lastFocus&&lastFocus.focus(); }
+
+async function showDistrict(stateN, distN){
+  const d = DISTRICTS.find(x=>x.state===stateN&&x.district===distN)||{};
+  openModal(d.district_label||distN, (STATES.find(s=>s.name===stateN)||{}).display||stateN);
+  try{
+    const res = await api(`/api/district/${encodeURIComponent(stateN)}/${encodeURIComponent(distN)}?snap=${SNAP}&limit=300`);
+    const c = CMP[stateN+'|'+distN]||{};
+    const act = res.vendors.filter(v=>v.installs>0);
+    $('#mBody').innerHTML = `
+      <div class="mstats">
+        <div class="mstat"><div class="lbl">Installations</div><div class="v">${fmt(d.installs)}</div></div>
+        <div class="mstat"><div class="lbl">Capacity</div><div class="v">${fmt1(d.capacity_kw)} <span style="font-size:11px;color:var(--dim)">kW</span></div></div>
+        <div class="mstat"><div class="lbl">Listed vendors</div><div class="v">${fmt(d.vendor_count)}</div></div>
+        <div class="mstat"><div class="lbl">Active here</div><div class="v">${fmt(d.active_vendors)}</div></div>
+        <div class="mstat"><div class="lbl">Change</div><div class="v" style="color:${(c.d_installs||0)>0?'var(--pos)':(c.d_installs||0)<0?'var(--neg)':'var(--dim)'}">${HAS_PREV?(c.d_installs>0?'+':'')+fmt(c.d_installs||0):'—'}</div></div>
+      </div>
+      <table><thead><tr><th style="width:30px">#</th><th>Vendor</th><th>Contact</th><th>Rating</th><th class="tnum">Installs</th><th class="tnum">kW</th></tr></thead>
+      <tbody>${act.length?act.slice(0,150).map((v,i)=>`<tr>
+        <td class="tnum" style="color:var(--dim)">${i+1}</td>
+        <td><span class="vlink ${MINE.test(v.name)?'mine':''}" data-v="${v.vendor_id}">${v.name}</span></td>
+        <td style="color:var(--dim);font-size:11px">${v.contact_name||'—'}${v.contact_phone?'<br>'+v.contact_phone:''}</td>
+        <td class="stars">${v.rating?'★'+v.rating:'—'}</td>
+        <td class="tnum">${fmt(v.installs)}</td><td class="tnum">${fmt1(v.capacity)}</td></tr>`).join('')
+        :'<tr><td colspan="6" class="empty">No vendor reports an installation in this district yet.</td></tr>'}</tbody></table>
+      ${act.length>150?`<div class="empty">Top 150 of ${fmt(act.length)} shown.</div>`:''}`;
+  }catch(e){ $('#mBody').innerHTML=`<div class="empty">${e.message}</div>`; }
+}
+
+async function showVendor(id){
+  openModal('Vendor','Loading…');
+  try{
+    const v=await api(`/api/vendor/${id}?snap=${SNAP}`);
+    $('#mTitle').textContent=v.name;
+    $('#mSub').textContent=[v.contact_name,v.contact_phone,v.contact_email].filter(Boolean).join(' · ')+(v.redacted?' [contact details not in public build]':'');
+    const cov=(v.coverage||[]).filter(c=>c.installs>0);
+    const maxI=Math.max(...cov.map(c=>c.installs),1);
+    const stateGroups={};
+    cov.forEach(c=>{ (stateGroups[c.state]=stateGroups[c.state]||[]).push(c); });
+    $('#mBody').innerHTML=`
+      <div class="mstats">
+        <div class="mstat"><div class="lbl">Rating</div><div class="v">${v.rating?'★'+v.rating:'—'} <span style="font-size:11px;color:var(--dim)">${fmt(v.rating_count||0)} reviews</span></div></div>
+        <div class="mstat"><div class="lbl">Statewide installs</div><div class="v">${fmt(v.state_installs)}</div></div>
+        <div class="mstat"><div class="lbl">Statewide kW</div><div class="v">${fmt1(v.state_capacity)}</div></div>
+        <div class="mstat"><div class="lbl">Nationwide installs</div><div class="v">${fmt(v.nat_installs)}</div></div>
+        <div class="mstat"><div class="lbl">States active</div><div class="v">${fmt(Object.keys(stateGroups).length)}</div></div>
+      </div>
+      <div class="cov">${Object.entries(stateGroups).map(([st,rows])=>`
+        <div style="font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:${stateColor(st)};margin:12px 0 6px">${st}</div>
+        ${rows.map(c=>`<div class="covrow"><span>${c.label}</span><span class="covbar"><i style="width:${c.installs/maxI*100}%;background:${stateColor(st)}"></i></span><span class="tnum">${fmt(c.installs)}</span></div>`).join('')}`).join('')}
+        ${v.address?`<div style="margin-top:14px;font-size:12px;color:var(--dim)"><strong style="color:var(--text)">Address</strong><br>${v.address}</div>`:''}
+        ${v.brands?`<div style="margin-top:8px;font-size:12px;color:var(--dim)"><strong style="color:var(--text)">Brands</strong><br>${v.brands.split('|').join(' · ')}</div>`:''}
+      </div>`;
+  }catch(e){ $('#mBody').innerHTML=`<div class="empty">${e.message}</div>`; }
+}
+
+/* ═══════════════════ LIVE REFRESH ═══════════════════ */
+function setLive(on){
+  clearInterval(timer); timer=null;
+  $('#dot').classList.toggle('on',on);
+  $('#liveBtn').classList.toggle('on',on);
+  $('#liveBtn').textContent=on?'Stop refresh':'Auto-refresh';
+  if(on){
+    const beat=async()=>{
+      try{
+        if(STATIC){ const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'}); if(r.ok){ const f=await r.json(); if(f.generatedAt!==STATIC.generatedAt){STATIC=f;SNAP=f.latest;} } }
+        META=await api('/api/meta');
+        if(META.latest&&Number(META.latest)!==Number(SNAP)){SNAP=META.latest;$('#snapSel').value=SNAP;}
+        await refresh();
+        $('#livetxt').textContent='updated '+new Date().toLocaleTimeString('en-IN');
+      }catch(e){$('#livetxt').textContent='failed';}
+    };
+    beat(); timer=setInterval(beat,15000);
+    $('#livetxt').textContent='polling';
+  } else $('#livetxt').textContent='idle';
+}
+
+/* ═══════════════════ EVENTS ═══════════════════ */
+document.addEventListener('click', e=>{
+  // solar cell
+  const sc2=e.target.closest('.solar-cell');
+  if(sc2){ const k=sc2.dataset.key; if(k){ const[st,...rest]=k.split('|'); showDistrict(st,rest.join('|')); } return; }
+  // tab
+  const tab=e.target.closest('.tab');
+  if(tab){ ACTIVE_STATE=tab.dataset.state||null; drawTabs(); drawStrip(DISTRICTS.concat(ACTIVE_STATE?STATES.flatMap(()=>[]):[])); refresh(); return; }
+  // state card
+  const sc=e.target.closest('.scard');
+  if(sc){ ACTIVE_STATE=sc.dataset.state; drawTabs(); refresh(); return; }
+  // pin button
+  const pin=e.target.closest('[data-pin]');
+  if(pin){ const k=decodeURIComponent(pin.dataset.pin); PINS.has(k)?PINS.delete(k):(PINS.size<4?PINS.add(k):null); drawLadder(); drawTray(); return; }
+  // vendor link
+  const vl=e.target.closest('[data-v]');
+  if(vl&&vl.classList.contains('vlink')){ showVendor(vl.dataset.v); return; }
+  // district row
+  const row=e.target.closest('.lrow');
+  if(row){ const [st,...rest]=decodeURIComponent(row.dataset.key).split('|'); showDistrict(st,rest.join('|')); return; }
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+$('#scrim').addEventListener('click', e=>{ if(e.target===$('#scrim')) closeModal(); });
+$('#mClose').addEventListener('click', closeModal);
+$('#clearPins').addEventListener('click', ()=>{ PINS.clear(); drawLadder(); drawTray(); });
+$('#liveBtn').addEventListener('click', ()=>setLive(!timer));
+$('#snapSel').addEventListener('change', e=>{ SNAP=Number(e.target.value); refresh(); });
+let sqT; $('#q').addEventListener('input', e=>{ clearTimeout(sqT); sqT=setTimeout(()=>loadTop(e.target.value.trim()),250); });
+
+/* ═══════════════════ SOLAR POTENTIAL (Open Meteo) ═══════════════════ */
+
+// District coordinates for all 53 districts (TN + KL)
+const DISTRICT_COORDS = {
+  // Tamil Nadu
+  "TAMIL NADU|Ariyalur":{"lat":11.14,"lon":79.08},
+  "TAMIL NADU|CHENGALPATTU":{"lat":12.69,"lon":79.97},
+  "TAMIL NADU|Chennai":{"lat":13.08,"lon":80.27},
+  "TAMIL NADU|Coimbatore":{"lat":11.02,"lon":76.96},
+  "TAMIL NADU|Cuddalore":{"lat":11.75,"lon":79.77},
+  "TAMIL NADU|Dharmapuri":{"lat":12.13,"lon":78.16},
+  "TAMIL NADU|Dindigul":{"lat":10.36,"lon":77.97},
+  "TAMIL NADU|Erode":{"lat":11.34,"lon":77.73},
+  "TAMIL NADU|KALLAKURICHI":{"lat":11.74,"lon":78.96},
+  "TAMIL NADU|Kanchipuram":{"lat":12.83,"lon":79.70},
+  "TAMIL NADU|Kanniyakumari":{"lat":8.08,"lon":77.55},
+  "TAMIL NADU|Karur":{"lat":10.96,"lon":78.08},
+  "TAMIL NADU|Krishnagiri":{"lat":12.52,"lon":78.21},
+  "TAMIL NADU|Madurai":{"lat":9.92,"lon":78.12},
+  "TAMIL NADU|Mayiladuthurai":{"lat":11.10,"lon":79.65},
+  "TAMIL NADU|Nagapattinam":{"lat":10.77,"lon":79.84},
+  "TAMIL NADU|Namakkal":{"lat":11.22,"lon":78.17},
+  "TAMIL NADU|Perambalur":{"lat":11.23,"lon":78.88},
+  "TAMIL NADU|Pudukkottai":{"lat":10.38,"lon":78.82},
+  "TAMIL NADU|Ramanathapuram":{"lat":9.37,"lon":78.83},
+  "TAMIL NADU|Ranipet":{"lat":12.92,"lon":79.33},
+  "TAMIL NADU|Salem":{"lat":11.66,"lon":78.15},
+  "TAMIL NADU|Sivaganga":{"lat":9.84,"lon":78.48},
+  "TAMIL NADU|TENKASI":{"lat":8.96,"lon":77.31},
+  "TAMIL NADU|Thanjavur":{"lat":10.79,"lon":79.14},
+  "TAMIL NADU|The Nilgiris":{"lat":11.41,"lon":76.69},
+  "TAMIL NADU|Theni":{"lat":10.01,"lon":77.48},
+  "TAMIL NADU|Thiruvallur":{"lat":13.14,"lon":79.90},
+  "TAMIL NADU|Thiruvannamalai":{"lat":12.23,"lon":79.07},
+  "TAMIL NADU|Thiruvarur":{"lat":10.77,"lon":79.64},
+  "TAMIL NADU|Thoothukkudi":{"lat":8.76,"lon":78.14},
+  "TAMIL NADU|Tiruchirappalli":{"lat":10.79,"lon":78.70},
+  "TAMIL NADU|Tirunelveli":{"lat":8.73,"lon":77.70},
+  "TAMIL NADU|Tirupathur":{"lat":12.49,"lon":78.57},
+  "TAMIL NADU|Tiruppur":{"lat":11.10,"lon":77.34},
+  "TAMIL NADU|Tiruvannamalai":{"lat":12.23,"lon":79.07},
+  "TAMIL NADU|Vellore":{"lat":12.92,"lon":79.13},
+  "TAMIL NADU|Viluppuram":{"lat":11.94,"lon":79.49},
+  "TAMIL NADU|Virudhunagar":{"lat":9.58,"lon":77.96},
+  // Kerala
+  "KERALA|Alappuzha":{"lat":9.49,"lon":76.34},
+  "KERALA|Ernakulam":{"lat":9.93,"lon":76.27},
+  "KERALA|Idukki":{"lat":9.92,"lon":76.97},
+  "KERALA|Kannur":{"lat":11.87,"lon":75.37},
+  "KERALA|Kasaragod":{"lat":12.50,"lon":74.99},
+  "KERALA|Kollam":{"lat":8.88,"lon":76.60},
+  "KERALA|Kottayam":{"lat":9.59,"lon":76.52},
+  "KERALA|Kozhikode":{"lat":11.25,"lon":75.78},
+  "KERALA|Malappuram":{"lat":11.07,"lon":76.07},
+  "KERALA|Palakkad":{"lat":10.78,"lon":76.65},
+  "KERALA|Pathanamthitta":{"lat":9.26,"lon":76.79},
+  "KERALA|Thiruvananthapuram":{"lat":8.52,"lon":76.94},
+  "KERALA|Thrissur":{"lat":10.52,"lon":76.21},
+  "KERALA|Wayanad":{"lat":11.61,"lon":76.08},
+};
+
+let SOLAR_CACHE = null;   // { key: { irr, days, fetchedAt } }
+let SOLAR_LOADING = false;
+
+/** Fetch solar irradiance for all districts from Open Meteo in batches. */
+async function fetchSolarData(force=false) {
+  if (SOLAR_CACHE && !force) return SOLAR_CACHE;
+  if (SOLAR_LOADING) return null;
+  SOLAR_LOADING = true;
+  $('#solarStatus').textContent = 'fetching…';
+
+  const keys = Object.keys(DISTRICT_COORDS);
+  const BATCH = 8;  // Open Meteo allows many requests but we batch to be polite
+  const results = {};
+
+  try {
+    for (let i=0; i<keys.length; i+=BATCH) {
+      const batch = keys.slice(i, i+BATCH);
+      await Promise.all(batch.map(async key => {
+        const {lat,lon} = DISTRICT_COORDS[key];
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+          `&daily=shortwave_radiation_sum&timezone=Asia/Kolkata&forecast_days=7`;
+        try {
+          const r = await fetch(url, {cache:'no-store'});
+          const j = await r.json();
+          const vals = j.daily?.shortwave_radiation_sum || [];
+          const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+          results[key] = { irr: Math.round(avg*100)/100, days: vals, fetchedAt: new Date().toISOString() };
+        } catch(e) {
+          results[key] = { irr: null, days: [], fetchedAt: null };
+        }
+      }));
+      // small pause between batches
+      if (i+BATCH < keys.length) await new Promise(r=>setTimeout(r,200));
+    }
+    SOLAR_CACHE = results;
+    const ok = Object.values(results).filter(v=>v.irr!==null).length;
+    $('#solarStatus').textContent = `live · ${ok}/${keys.length} districts · ${new Date().toLocaleTimeString('en-IN')}`;
+  } catch(e) {
+    $('#solarStatus').textContent = 'fetch failed — using cached data';
+  }
+  SOLAR_LOADING = false;
+  return SOLAR_CACHE;
+}
+
+/** Render the solar potential grid. */
+async function drawSolarPanel(force=false) {
+  const grid = $('#solarGrid');
+  if (!SOLAR_CACHE && !force) {
+    grid.innerHTML = '<div class="solar-loading">Fetching live solar data from Open Meteo…</div>';
+  }
+
+  const solar = await fetchSolarData(force);
+  if (!solar) return;
+
+  // Cross-reference with district installation data
+  const distMap = Object.fromEntries(DISTRICTS.map(d=>[d.state+'|'+d.district, d]));
+
+  // Filter based on active state
+  const keys = Object.keys(DISTRICT_COORDS).filter(k => {
+    if (!ACTIVE_STATE) return true;
+    return k.startsWith(ACTIVE_STATE+'|');
+  });
+
+  // Compute normalised scores for bar heights
+  const irrs = keys.map(k=>solar[k]?.irr||0).filter(v=>v>0);
+  const insts = keys.map(k=>distMap[k]?.installs||0);
+  const maxIrr  = Math.max(...irrs, 1);
+  const maxInst = Math.max(...insts, 1);
+
+  // Sort: high irradiance + low installs = top opportunity
+  const scored = keys.map(k => {
+    const s = solar[k] || {};
+    const d = distMap[k] || {};
+    const irr   = s.irr || 0;
+    const inst  = d.installs || 0;
+    // opportunity score: high irradiance penalised by installs (normalised)
+    const opp = irr/maxIrr - (inst/maxInst)*0.6;
+    return {k, irr, inst, opp, active: d.active_vendors||0, label: d.district_label||(k.split('|')[1]), state:d.state||k.split('|')[0]};
+  }).sort((a,b) => b.opp - a.opp);
+
+  // Opportunity tiers
+  const oppMax = Math.max(...scored.map(s=>s.opp));
+  const oppMin = Math.min(...scored.map(s=>s.opp));
+  const oppRange = oppMax - oppMin || 1;
+  const tier = opp => {
+    const pct = (opp-oppMin)/oppRange;
+    if (pct > 0.65) return ['high','High opportunity'];
+    if (pct > 0.35) return ['med', 'Moderate'];
+    return ['low','Low / saturated'];
+  };
+
+  grid.innerHTML = scored.map(({k,irr,inst,opp,label,state}) => {
+    const irrPct = (irr/maxIrr*100).toFixed(0);
+    const instPct= (inst/maxInst*100).toFixed(0);
+    const days   = (solar[k]?.days||[]).map(v=>v||0);
+    const maxDay = Math.max(...days,1);
+    const bars   = days.map(v=>`<div class="sc-bar" style="height:${Math.max(3,(v/maxDay*28)).toFixed(0)}px;background:var(--solar);opacity:${0.4+v/maxDay*0.6}"></div>`).join('');
+    const [tc, tl] = tier(opp);
+    const col = state==='KERALA'?'var(--c1)':'var(--c0)';
+    const key = encodeURIComponent(state+'|'+(label));
+    return `<div class="solar-cell" data-key="${k}" title="${label} — ${irr} kWh/m²/day · ${fmt(inst)} installs">
+      <div class="sc-name">${label}</div>
+      <div class="sc-state" style="color:${col}">${state==='KERALA'?'KL':'TN'} · ${irr?irr+' kWh/m²':'—'}</div>
+      <div class="sc-bars">${bars}</div>
+      <div class="sc-vals">
+        <span class="sc-irr">☀ ${irr||'—'}</span>
+        <span class="sc-inst">⚡ ${fmt(inst)}</span>
+      </div>
+      <span class="sc-opp ${tc}">${tl}</span>
+    </div>`;
+  }).join('');
+}
+
+// Wire the refresh button
+document.addEventListener('DOMContentLoaded', ()=>{
+  $('#solarRefreshBtn')?.addEventListener('click', ()=>drawSolarPanel(true));
+});
+
+// Hook into main refresh
+const _origRefresh2 = typeof _origRefresh !== 'undefined' ? _origRefresh : null;
+
+boot().catch(e=>{ $('#ladder').innerHTML=`<div class="empty">API error: ${e.message}</div>`; });
+
+/* ═══════════════════ TOP-3 COMPARISON SECTION ═══════════════════ */
+let CMP_STATE = 'all', CMP_SORT = 'installs';
+
+async function loadComparison() {
+  const grid = $('#cmpGrid');
+  grid.innerHTML = '<div class="loading">Loading district data…</div>';
+
+  try {
+    // Fetch all districts + top vendors for each in parallel (batched)
+    const allDists = DISTRICTS.length ? DISTRICTS : await api('/api/districts?snap='+SNAP);
+    const filtered = CMP_STATE === 'all' ? allDists : allDists.filter(d=>d.state===CMP_STATE);
+
+    // Fetch top 5 vendors per district (we show 3 + find Kondaas)
+    const results = await Promise.all(
+      filtered.map(d => api(`/api/district/${encodeURIComponent(d.state)}/${encodeURIComponent(d.district)}?snap=${SNAP}&limit=10`)
+        .then(r => ({ ...d, vendors: r.vendors || [] }))
+        .catch(() => ({ ...d, vendors: [] })))
+    );
+
+    // Sort
+    let rows = [...results];
+    if (CMP_SORT === 'installs') rows.sort((a,b) => (b.installs||0)-(a.installs||0));
+    else if (CMP_SORT === 'kondaas') {
+      rows.sort((a,b) => {
+        const ka = a.vendors.findIndex(v => MINE.test(v.name));
+        const kb = b.vendors.findIndex(v => MINE.test(v.name));
+        return (ka<0?999:ka) - (kb<0?999:kb);
+      });
+    } else rows.sort((a,b) => a.district_label.localeCompare(b.district_label));
+
+    const maxInst = Math.max(...rows.flatMap(d=>d.vendors.slice(0,3).map(v=>v.installs||0)), 1);
+    const col = d => stateColor(d.state);
+
+    grid.innerHTML = rows.map(d => {
+      const top3  = d.vendors.filter(v=>v.installs>0).slice(0,3);
+      const kIdx  = d.vendors.findIndex(v => MINE.test(v.name));
+      const kVend = kIdx >= 0 ? d.vendors[kIdx] : null;
+      const kInTop3 = top3.some(v => MINE.test(v.name));
+
+      const vrows = top3.map((v,i) => {
+        const isK = MINE.test(v.name);
+        const pct = ((v.installs||0)/maxInst*100).toFixed(1);
+        return `<div class="vr ${isK?'krow':''}">
+          <div class="vr-rank">${i+1}</div>
+          <div>
+            <div class="vr-name ${isK?'kname':''}">
+              <span class="vlink" data-v="${v.vendor_id}">${v.name||'—'}</span>
+            </div>
+            <div class="vr-rate">${v.rating?'★'+v.rating:''}</div>
+            <div class="vr-bar"><div class="vr-fill" style="width:${pct}%;background:${isK?'var(--solar)':col(d)}"></div></div>
+          </div>
+          <div class="vr-inst">${fmt(v.installs)}</div>
+        </div>`;
+      }).join('');
+
+      // Show Kondaas below the top 3 if not already in it
+      const ksep = (!kInTop3 && kVend) ? `<div class="ksep-row">
+        <span class="ksl">★ KONDAAS</span>
+        <span class="ksr">Rank #${kIdx+1}</span>
+        <span class="ksi">${fmt(kVend.installs)}</span>
+      </div>` : (!kInTop3 && !kVend) ? `<div class="ksep-row">
+        <span class="ksl">★ KONDAAS</span>
+        <span class="ksr" style="margin-right:0;color:var(--dim)">not active in this district</span>
+      </div>` : '';
+
+      const kRank = kIdx >= 0 ? kIdx+1 : null;
+      return `<div class="cmp-card">
+        <div class="cmp-card-head">
+          <span class="cdot" style="background:${col(d)}"></span>
+          <h4>${d.district_label}</h4>
+          <span class="ctot" style="margin-right:8px">${fmt(d.installs)}</span>
+          ${kRank ? `<span class="kbadge">KONDAAS #${kRank}</span>` : '<span class="kbadge" style="opacity:.4">—</span>'}
+        </div>
+        ${top3.length ? vrows : '<div class="empty" style="padding:12px 14px;font-size:12px">No active vendors reported.</div>'}
+        ${ksep}
+      </div>`;
+    }).join('');
+
+    // Draw state filter buttons dynamically
+    if (!$('#cmpStateBtns').dataset.built) {
+      $('#cmpStateBtns').dataset.built = '1';
+      $('#cmpStateBtns').innerHTML = STATES.map(s =>
+        `<button class="cmp-tog" data-cstate="${s.name}" style="border-color:${stateColor(s.name)};color:${stateColor(s.name)};opacity:.6">${s.display}</button>`
+      ).join('');
+    }
+  } catch(e) {
+    grid.innerHTML = `<div class="empty">${e.message}</div>`;
+  }
+}
+
+// Wire comparison controls
+document.addEventListener('click', e => {
+  const ct = e.target.closest('.cmp-tog');
+  if (ct) {
+    document.querySelectorAll('.cmp-tog').forEach(b=>b.classList.remove('on'));
+    ct.classList.add('on');
+    CMP_STATE = ct.dataset.cstate;
+    loadComparison();
+  }
+});
+$('#cmpSort').addEventListener('change', e => { CMP_SORT = e.target.value; loadComparison(); });
+
+// Hook into the main refresh so comparison updates too
+const _origRefresh = refresh;
+refresh = async function() {
+  await _origRefresh.apply(this, arguments);
+  loadComparison();
+};
+</script>
+</body>
+</html>
