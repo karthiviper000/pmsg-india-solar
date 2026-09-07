@@ -1,0 +1,77 @@
+name: Scrape and Deploy
+
+on:
+  schedule:
+    - cron: '0 * * * *'     # every hour
+  workflow_dispatch:         # manual trigger from Actions tab
+  push:
+    branches: [main]         # also runs on every push
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Cache Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-v1
+
+      - name: Install Playwright
+        run: |
+          npm install playwright --no-save
+          npx playwright install --with-deps chromium
+
+      - name: Scrape portal and build dashboard
+        run: node src/ci-run.js --redact
+
+      - name: Commit updated data
+        run: |
+          git config user.name  "harvest-bot"
+          git config user.email "harvest-bot@users.noreply.github.com"
+          # keep-alive: touch a file once a month so GitHub never disables the schedule
+          MONTH=$(date -u '+%Y-%m')
+          mkdir -p data/store
+          echo $MONTH > data/store/.keepalive
+          git add -f data/store
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Data update $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin main || true
+            git push
+          fi
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

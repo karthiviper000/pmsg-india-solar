@@ -1,0 +1,6 @@
+data/pmsg.db
+data/pmsg.db-*
+data/harvests/
+dist/
+node_modules/
+package-lock.json

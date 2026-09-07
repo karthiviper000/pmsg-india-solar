@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PM Surya Ghar Solar Dashboard — Share</title>
+<meta name="description" content="Live rooftop solar vendor registry for Tamil Nadu and Kerala — PM Surya Ghar portal data, updated hourly.">
+<style>
+:root{--ink:#080E1A;--panel:#0F1828;--line:#1C2C42;--text:#E6EDF8;--dim:#6A7D96;--solar:#F5B60D;--pv:#4C8FE8;--pos:#3DC98A;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Barlow Condensed',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--text);font-family:var(--body);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:560px;width:100%;padding:36px 40px;text-align:center}
+.sun{font-size:56px;margin-bottom:16px}
+h1{font-family:var(--disp);font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;line-height:1.1}
+h1 span{color:var(--solar)}
+p{color:var(--dim);font-size:14px;margin-top:10px;line-height:1.7}
+.btn{display:inline-block;background:var(--solar);color:#07101F;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none;margin-top:24px;letter-spacing:.02em}
+.btn:hover{opacity:.9}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:24px}
+.stat{background:#0A1120;border:1px solid var(--line);border-radius:8px;padding:12px}
+.stat .v{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--text)}
+.stat .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.note{font-size:11px;color:var(--dim);margin-top:20px}
+.note span{color:var(--pos)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="sun">☀️</div>
+  <h1>PM Surya Ghar<br><span>Solar Dashboard</span></h1>
+  <p>Live rooftop solar vendor registry for <strong>Tamil Nadu</strong> and <strong>Kerala</strong> — scraped directly from the Ministry of New &amp; Renewable Energy portal, updated every hour automatically.</p>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="v" id="s-installs">—</div><div class="l">Installations</div></div>
+    <div class="stat"><div class="v" id="s-vendors">—</div><div class="l">Unique vendors</div></div>
+    <div class="stat"><div class="v" id="s-districts">—</div><div class="l">Districts</div></div>
+  </div>
+  <a class="btn" href="index.html">Open Dashboard →</a>
+  <p class="note"><span>●</span> Data updates hourly · Source: pmsuryaghar.gov.in · Built with Node.js + GitHub Actions</p>
+  <p class="note" id="last-updated" style="margin-top:6px"></p>
+</div>
+<script>
+fetch('data.json', {cache:'no-store'}).then(r=>r.json()).then(d=>{
+  const fmt = n => n==null?'—':Number(n).toLocaleString('en-IN');
+  const i = d.india || {};
+  document.getElementById('s-installs').textContent  = fmt(i.installs);
+  document.getElementById('s-vendors').textContent   = fmt(i.unique_vendors);
+  document.getElementById('s-districts').textContent = fmt(i.districts);
+  const snap = d.snapshots?.[0];
+  if (snap) document.getElementById('last-updated').textContent =
+    'Last updated: ' + new Date(snap.captured_at).toLocaleString('en-IN', {dateStyle:'medium',timeStyle:'short'});
+}).catch(()=>{});
+</script>
+</body>
+</html>
